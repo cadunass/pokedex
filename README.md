@@ -1,3 +1,13 @@
+# TODO
+
+- Add loading
+- Add list options (sort order, ...)
+- Develop paginate
+- Develop favorites
+- Develop modal (showing pokemon detailed info)
+- Develop search bar
+- Setup github pages
+
 # Pokedex
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.1.1.
