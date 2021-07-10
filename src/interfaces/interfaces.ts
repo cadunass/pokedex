@@ -1,6 +1,7 @@
 export interface PokeAPI {
   count: number;
   next: string;
+  previous: string;
   results: Results[];
 }
 

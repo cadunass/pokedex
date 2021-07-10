@@ -28,56 +28,113 @@ import { Component, OnInit } from '@angular/core';
           </div>
         </div>
       </div>
-      <nav aria-label="Page navigation example">
+      <nav style="margin-top: 16px">
         <ul class="pagination">
-          <li class="page-item">
-            <a class="page-link" href="#" aria-label="Previous">
-              <span aria-hidden="true">&laquo;</span>
-            </a>
-          </li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item">
-            <a class="page-link" href="#" aria-label="Next">
-              <span aria-hidden="true">&raquo;</span>
-            </a>
-          </li>
+          <div class="teste">{{ totalElements }} total pokemons</div>
+          <div style="display: flex;">
+            <li class="page-item">
+              <a class="page-link">
+                <i
+                  class="bi bi-chevron-double-left"
+                  (click)="onClickChevron('previous')"
+                ></i>
+              </a>
+            </li>
+            <li class="page-item" *ngFor="let page of getTotalPages()">
+              <a class="page-link" (click)="onClickPaginate(page)">{{
+                page
+              }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link">
+                <i
+                  class="bi bi-chevron-double-right"
+                  (click)="onClickChevron('next')"
+                ></i>
+              </a>
+            </li>
+          </div>
         </ul>
       </nav>
     </div>
   `,
-  styles: [],
+  styles: [
+    `
+      .pagination {
+        justify-content: space-between;
+      }
+    `,
+  ],
   providers: [PokeDataService],
 })
 export class HomeComponent implements OnInit {
   pokeList: PokeAPI;
   loading: boolean = false;
+  currentPage: number = 0;
+  totalElements: number = 0;
+  itemsPerPage: number = 9;
 
   constructor(private pokeService: PokeDataService) {
     this.pokeList = {
       count: 0,
       next: '',
+      previous: '',
       results: [],
     };
   }
 
-  async getPokemons(): Promise<PokeAPI> {
-    let response = await this.pokeService.getData().toPromise();
+  async ngOnInit() {
+    this.loading = true;
+    await this.getPokemons();
+    this.totalElements = this.pokeList.count;
+    this.loading = false;
+  }
+
+  onClickPaginate(page: number) {
+    this.currentPage = page - 1;
+
+    this.getPokemons();
+  }
+
+  async onClickChevron(type: string): Promise<void> {
+    const url = type === 'next' ? this.pokeList.next : this.pokeList.previous;
+
+    this.currentPage =
+      type === 'next' ? this.currentPage + 1 : this.currentPage - 1;
+
+    const response = await this.pokeService.fetchService(url).toPromise();
     response.results.map((pokemon) => this.getPokemonData(pokemon));
 
-    return response as PokeAPI;
+    this.pokeList = response;
+  }
+
+  async getPokemons(): Promise<void> {
+    const offset = this.currentPage * this.itemsPerPage;
+    const response = await this.pokeService
+      .fetchPokemonsService(offset, this.itemsPerPage)
+      .toPromise();
+
+    response.results.map((pokemon) => this.getPokemonData(pokemon));
+
+    this.pokeList = response;
   }
 
   getPokemonData(pokemon: Results): void {
     this.pokeService
-      .getPokemon(pokemon.name)
+      .fetchPokemonByNameService(pokemon.name)
       .subscribe((data: PokemonData) => (pokemon.data = data));
   }
 
-  async ngOnInit() {
-    this.loading = true;
-    this.pokeList = await this.getPokemons();
-    this.loading = false;
+  getTotalPages() {
+    const pages = Math.ceil(this.totalElements / this.itemsPerPage);
+
+    if (this.currentPage <= 3) {
+      return Array.from({ length: pages }, (_, i) => i + 1).slice(0, 5);
+    } else {
+      return Array.from({ length: pages }, (_, i) => i + 1).slice(
+        this.currentPage - 3,
+        this.currentPage + 2
+      );
+    }
   }
 }

@@ -13,11 +13,17 @@ export class PokeDataService {
     this.pokeApi = environment.defaultUrl;
   }
 
-  getData() {
-    return this.http.get<PokeAPI>(`${this.pokeApi}?limit=9`);
+  fetchService(url: string) {
+    return this.http.get<PokeAPI>(url);
   }
 
-  getPokemon(name: string) {
+  fetchPokemonsService(offset: number, limit: number) {
+    return this.http.get<PokeAPI>(
+      `${this.pokeApi}?offset=${offset}&limit=${limit}`
+    );
+  }
+
+  fetchPokemonByNameService(name: string) {
     return this.http.get<PokemonData>(`${this.pokeApi}/${name}`);
   }
 }

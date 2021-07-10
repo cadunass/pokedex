@@ -1,45 +1,54 @@
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-  <li class="nav-item" role="presentation">
-    <a
-      class="nav-link active"
-      id="home-tab"
-      data-toggle="tab"
-      href="home"
-      role="tab"
-      aria-controls="home"
-      aria-selected="true"
-    >
-      Home
-    </a>
-  </li>
-  <li class="nav-item" role="presentation">
-    <a
-      class="nav-link"
-      id="favorite-tab"
-      data-toggle="tab"
-      href="favorites"
-      role="tab"
-      aria-controls="favorite"
-      aria-selected="false"
-      >Favorites
-    </a>
-  </li>
-</ul>
-<div class="tab-content" id="myTabContent">
-  <div
-    class="tab-pane fade show active"
-    id="home"
-    role="tabpanel"
-    aria-labelledby="home-tab"
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand">My Pokedex</a>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
   >
-    ...
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="home">
+          Home
+          <span class="sr-only">(current)</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="favorites">Favorites</a>
+      </li>
+    </ul>
+    <div class="dropdown">
+      <button
+        class="btn btn-secondary dropdown-toggle"
+        type="button"
+        id="dropdownMenuButton"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        Options
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item">With paginate</a>
+        <a class="dropdown-item">Without paginate</a>
+      </div>
+    </div>
+    <form class="form-inline my-2 my-lg-0">
+      <input
+        class="form-control mr-sm-2"
+        type="search"
+        placeholder="Search"
+        aria-label="Search"
+      />
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </form>
   </div>
-  <div
-    class="tab-pane fade"
-    id="favorite"
-    role="tabpanel"
-    aria-labelledby="favorite-tab"
-  >
-    ...
-  </div>
-</div>
+</nav>
