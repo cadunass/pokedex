@@ -1,4 +1,16 @@
-## v0.1
+# v0.1
+
+Para executar:
+
+```shell
+ng serve --open
+```
+
+A página possui uma tela principal listando todos os pokemons e uma segunda rota de favoritos, onde todos os pokemons adicionados na tela anterior estarão listados.
+
+Utilizado Angular v12.1.1 com bootstrap v4.6.
+
+Foi utilizado como base a API https://pokeapi.co/docsv2/.
 
 ## TODO
 
