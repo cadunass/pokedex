@@ -5,8 +5,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-favorites',
   template: `
-    <div class="container">
-      <div class="loading" *ngIf="loading"></div>
+    <div class="container" style="padding: 8px">
       <div class="row" *ngIf="favoritedPokeList.length">
         <div class="col" *ngFor="let poke of favoritedPokeList">
           <div class="card" style="width: 18rem" *ngIf="poke.data">
@@ -16,16 +15,17 @@ import { Component, OnInit } from '@angular/core';
               src="{{ poke.data.sprites.front_default }}"
             />
             <div class="card-body">
-              <h5 class="card-title">#{{ poke.data.id }}</h5>
-              <h3 class="card-title">{{ poke.name }}</h3>
-              <div class="row">
-                <p *ngFor="let type of poke.data.types" class="card-text">
+              <div class="d-flex justify-content-center">
+                <h3 class="card-title">{{ poke.name }} #{{ poke.data.id }}</h3>
+              </div>
+              <div class="d-flex" style="justify-content: space-evenly">
+                <p
+                  *ngFor="let type of poke.data.types"
+                  class="badge badge-info"
+                >
                   {{ type.type.name }}
                 </p>
               </div>
-              <a class="btn btn-primary" (click)="onClickRemove(poke.name)">
-                Remove from favorites
-              </a>
             </div>
           </div>
         </div>
@@ -61,7 +61,7 @@ export class FavoritesComponent implements OnInit {
     if (favorites.length) {
       response.results.map(async (pokemon) => {
         const favoritedPoke = favorites.find(
-          (fav: string) => fav === pokemon.name
+          (fav: string) => fav === pokemon.name.toUpperCase()
         );
 
         if (favoritedPoke) {
@@ -72,9 +72,14 @@ export class FavoritesComponent implements OnInit {
     }
   }
 
-  getPokemonData(pokemon: Results): void {
-    this.pokeService
-      .fetchPokemonByNameService(pokemon.name)
-      .subscribe((data: PokemonData) => (pokemon.data = data));
+  async getPokemonData(pokemon: Results): Promise<void> {
+    const { name } = pokemon;
+
+    await this.pokeService
+      .fetchPokemonByNameService(name)
+      .subscribe((data: PokemonData) => {
+        pokemon.name = name.toUpperCase();
+        pokemon.data = data;
+      });
   }
 }

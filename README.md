@@ -1,12 +1,11 @@
-# TODO
+## v0.1
 
-- Add loading
-- Add list options (sort order, ...)
-- Develop paginate
-- Develop favorites
-- Develop modal (showing pokemon detailed info)
-- Develop search bar
-- Setup github pages
+## TODO
+
+- Loading
+- Search bar
+- List options (sort order, ...)
+- Github pages
 
 # Pokedex
 

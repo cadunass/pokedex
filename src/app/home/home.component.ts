@@ -16,19 +16,29 @@ import { Component, OnInit } from '@angular/core';
                 src="{{ poke.data.sprites.front_default }}"
               />
               <div class="card-body">
-                <h5 class="card-title">#{{ poke.data.id }}</h5>
-                <h3 class="card-title">{{ poke.name }}</h3>
-                <div class="row">
-                  <p *ngFor="let type of poke.data.types" class="card-text">
+                <div class="d-flex justify-content-center">
+                  <h3 class="card-title">
+                    {{ poke.name }} #{{ poke.data.id }}
+                  </h3>
+                </div>
+                <div class="d-flex" style="justify-content: space-evenly">
+                  <p
+                    *ngFor="let type of poke.data.types"
+                    class="badge badge-info"
+                  >
                     {{ type.type.name }}
                   </p>
                 </div>
                 <a
-                  *ngIf="isPokemonAlreadySaved(poke.name)"
-                  class="btn btn-primary"
+                  class="btn btn-primary d-flex justify-content-center"
+                  [ngClass]="{ disabled: isPokemonAlreadySaved(poke.name) }"
                   (click)="onClickFav(poke.name)"
                 >
-                  Add to favorites
+                  {{
+                    isPokemonAlreadySaved(poke.name)
+                      ? 'Pokemon saved'
+                      : 'Add to favorites'
+                  }}
                 </a>
               </div>
             </div>
@@ -114,7 +124,7 @@ export class HomeComponent implements OnInit {
   }
 
   isPokemonAlreadySaved(pokeName: string) {
-    return !this.favorites.find((fav) => fav === pokeName);
+    return !!this.favorites.find((fav) => fav === pokeName);
   }
 
   onClickPaginate(page: number) {
@@ -141,8 +151,6 @@ export class HomeComponent implements OnInit {
   }
 
   async getPokemons(): Promise<void> {
-    this.loading = true;
-
     const offset = this.currentPage * this.itemsPerPage;
     const response = await this.pokeService
       .fetchPokemonsService(offset, this.itemsPerPage)
@@ -151,13 +159,17 @@ export class HomeComponent implements OnInit {
     response.results.map((pokemon) => this.getPokemonData(pokemon));
 
     this.pokeList = response;
-    this.loading = false;
   }
 
-  getPokemonData(pokemon: Results): void {
-    this.pokeService
-      .fetchPokemonByNameService(pokemon.name)
-      .subscribe((data: PokemonData) => (pokemon.data = data));
+  async getPokemonData(pokemon: Results): Promise<void> {
+    const { name } = pokemon;
+
+    await this.pokeService
+      .fetchPokemonByNameService(name)
+      .subscribe((data: PokemonData) => {
+        pokemon.name = name.toUpperCase();
+        pokemon.data = data;
+      });
   }
 
   getTotalPages() {
