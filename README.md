@@ -1,5 +1,15 @@
 # v0.1
 
+Requisitos:
+- node@14
+- angular/cli@12
+
+Baixar ou clonar o repositório e instalar todas as dependências através do comando:
+
+```shell
+npm install
+```
+
 Para executar:
 
 ```shell
